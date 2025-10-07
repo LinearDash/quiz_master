@@ -1,9 +1,6 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
   output   = "../src/generated/prisma"
@@ -12,4 +9,83 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+// ----------------- ENUMS -----------------
+
+enum GameMode {
+  QUESTION_PICK
+  RAPID_FIRE
+  AUDIO
+  VISUAL
+}
+
+enum MediaType {
+  NONE
+  AUDIO
+  VIDEO
+}
+
+// ----------------- MAIN MODELS -----------------
+
+model GameSession {
+  id             String   @id @default(cuid())
+  eventName      String
+  organizerImage String?
+  createdAt      DateTime @default(now())
+
+  teams  Team[]
+  rounds Round[]
+}
+
+model Round {
+  id                String   @id @default(cuid())
+  name              String? // optional: "Round 1", "Rapid Fire", etc.
+  gameMode          GameMode
+  pointsPerQuestion Int      @default(10)
+  totalQuestions    Int? // optional, for QUESTION_PICK or timed modes
+  durationInSeconds Int? // optional, for RAPID_FIRE
+
+  gameSession   GameSession @relation(fields: [gameSessionId], references: [id])
+  gameSessionId String
+
+  questions      Question[]
+  scoreHistories ScoreHistory[]
+}
+
+model Team {
+  id            String      @id @default(cuid())
+  name          String
+  score         Int         @default(0)
+  gameSession   GameSession @relation(fields: [gameSessionId], references: [id])
+  gameSessionId String
+
+  scoreHistory ScoreHistory[]
+}
+
+model Question {
+  id                 String    @id @default(cuid())
+  questionText       String
+  options            String[]
+  correctOptionIndex Int
+  mediaType          MediaType @default(NONE)
+  mediaUrl           String? // URL or local path to media
+  round              Round     @relation(fields: [roundId], references: [id])
+  roundId            String
+
+  scoreHistory ScoreHistory[]
+}
+
+// ----------------- SCORE HISTORY -----------------
+
+model ScoreHistory {
+  id         String   @id @default(cuid())
+  team       Team     @relation(fields: [teamId], references: [id])
+  teamId     String
+  round      Round    @relation(fields: [roundId], references: [id])
+  roundId    String
+  question   Question @relation(fields: [questionId], references: [id])
+  questionId String
+  points     Int // points earned for this question
+  timestamp  DateTime @default(now())
 }
