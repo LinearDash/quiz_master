@@ -30,6 +30,7 @@ enum MediaType {
 model GameSession {
   id             String   @id @default(cuid())
   eventName      String
+  organizerName  String
   organizerImage String?
   createdAt      DateTime @default(now())
 
