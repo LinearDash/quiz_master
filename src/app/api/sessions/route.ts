@@ -4,19 +4,25 @@ import { prisma } from "@/lib/prisma";
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
+
+    //Getting all the data from body/request
     const { eventName, organizerImage, organizerName } = body;
 
+    // return error if no event name is provided
     if (!eventName) {
       return NextResponse.json({ success: false, error: "Event Name is Required" },
         { status: 400 }
       )
     }
+
+    //return error if no organizer Name is provided
     if (!organizerName) {
       return NextResponse.json({ success: false, error: "Event Organizer name is Required" },
         { status: 400 }
       )
     }
 
+    //create a new session
     const session = await prisma.gameSession.create({
       data: { eventName, organizerName, organizerImage: organizerImage || null }
     })
