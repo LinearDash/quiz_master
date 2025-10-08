@@ -11,7 +11,7 @@ export async function POST(req: NextRequest) {
       questionText,
       options,
       correctOptionIndex,
-      mediaType = 'none',
+      mediaType = 'NONE',
       mediaUrl = null,
     } = body;
 
@@ -52,7 +52,7 @@ export async function POST(req: NextRequest) {
     }
 
     //Find the round
-    const round = prisma.round.findUnique({
+    const round = await prisma.round.findUnique({
       where: { id: roundId }
     })
 
@@ -64,7 +64,7 @@ export async function POST(req: NextRequest) {
     }
 
     //Create the question
-    const question = prisma.question.create({
+    const question = await prisma.question.create({
       data: {
         roundId,
         questionText,

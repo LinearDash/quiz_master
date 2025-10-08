@@ -11,6 +11,8 @@ export async function POST(req: NextRequest) {
       name
     } = body;
 
+    console.log(name);
+
     //return error if gameSessionId is not provided
     if (!gameSessionId) {
       return NextResponse.json(
@@ -19,7 +21,7 @@ export async function POST(req: NextRequest) {
       )
     }
     //return error if name is provided
-    if (!name || name !== "string") {
+    if (!name || typeof name !== "string") {
       return NextResponse.json(
         { success: false, error: "Team Name is required" },
         { status: 400 }
