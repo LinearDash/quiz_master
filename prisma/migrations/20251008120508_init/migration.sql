@@ -8,6 +8,7 @@ CREATE TYPE "MediaType" AS ENUM ('NONE', 'AUDIO', 'VIDEO');
 CREATE TABLE "GameSession" (
     "id" TEXT NOT NULL,
     "eventName" TEXT NOT NULL,
+    "organizerName" TEXT NOT NULL,
     "organizerImage" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 

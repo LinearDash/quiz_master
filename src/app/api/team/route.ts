@@ -11,7 +11,7 @@ export async function POST(req: NextRequest) {
       name
     } = body;
 
-    //return error if gamesessionId is not provided
+    //return error if gameSessionId is not provided
     if (!gameSessionId) {
       return NextResponse.json(
         { success: false, error: "GameSessionId is required" },
