@@ -5,7 +5,7 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
   try {
     const { id } = params;
 
-    const session = prisma.gameSession.findUnique({
+    const session = await prisma.gameSession.findUnique({
       where: { id },
       include: {
         teams: {
