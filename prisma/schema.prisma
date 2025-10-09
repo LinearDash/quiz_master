@@ -46,7 +46,7 @@ model Round {
   totalQuestions    Int? // optional, for QUESTION_PICK or timed modes
   durationInSeconds Int? // optional, for RAPID_FIRE
 
-  gameSession   GameSession @relation(fields: [gameSessionId], references: [id])
+  gameSession   GameSession @relation(fields: [gameSessionId], references: [id], onDelete: Cascade)
   gameSessionId String
 
   questions      Question[]
@@ -57,7 +57,7 @@ model Team {
   id            String      @id @default(cuid())
   name          String
   score         Int         @default(0)
-  gameSession   GameSession @relation(fields: [gameSessionId], references: [id])
+  gameSession   GameSession @relation(fields: [gameSessionId], references: [id], onDelete: Cascade)
   gameSessionId String
 
   scoreHistory ScoreHistory[]
@@ -70,7 +70,7 @@ model Question {
   correctOptionIndex Int
   mediaType          MediaType @default(NONE)
   mediaUrl           String? // URL or local path to media
-  round              Round     @relation(fields: [roundId], references: [id])
+  round              Round     @relation(fields: [roundId], references: [id], onDelete: Cascade)
   roundId            String
 
   scoreHistory ScoreHistory[]
@@ -80,11 +80,11 @@ model Question {
 
 model ScoreHistory {
   id         String   @id @default(cuid())
-  team       Team     @relation(fields: [teamId], references: [id])
+  team       Team     @relation(fields: [teamId], references: [id], onDelete: Cascade)
   teamId     String
-  round      Round    @relation(fields: [roundId], references: [id])
+  round      Round    @relation(fields: [roundId], references: [id], onDelete: Cascade)
   roundId    String
-  question   Question @relation(fields: [questionId], references: [id])
+  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
   questionId String
   points     Int // points earned for this question
   timestamp  DateTime @default(now())
