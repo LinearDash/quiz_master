@@ -40,7 +40,7 @@ model GameSession {
 
 model Round {
   id                String   @id @default(cuid())
-  name              String? // optional: "Round 1", "Rapid Fire", etc.
+  name              String
   gameMode          GameMode
   pointsPerQuestion Int      @default(10)
   totalQuestions    Int? // optional, for QUESTION_PICK or timed modes

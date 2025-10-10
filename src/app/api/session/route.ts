@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
+import { createSessionSchema, sessionSchema } from "@/lib/schemas/session";
+
 export async function GET() {
   try {
     const sessions = await prisma.gameSession.findMany({
@@ -33,26 +35,23 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
 
-    //Getting all the data from body/request
-    const { eventName, organizerImage, organizerName } = body;
+    const parseResult = createSessionSchema.safeParse(body);
 
-    // return error if no event name is provided
-    if (!eventName) {
-      return NextResponse.json({ success: false, error: "Event Name is Required" },
-        { status: 400 }
-      )
+    if (!parseResult.success) {
+      return NextResponse.json({ success: false, error: parseResult.error }, { status: 400 });
     }
-
-    //return error if no organizer Name is provided
-    if (!organizerName) {
-      return NextResponse.json({ success: false, error: "Event Organizer name is Required" },
-        { status: 400 }
-      )
-    }
+    const { eventName, organizerName, organizerImage } = parseResult.data;
 
     //create a new session
     const session = await prisma.gameSession.create({
-      data: { eventName, organizerName, organizerImage: organizerImage || null }
+      data: { eventName, organizerName, organizerImage: organizerImage || null },
+      include: {
+        teams: true,
+        rounds: true,
+        _count: {
+          select: { teams: true, rounds: true }
+        }
+      }
     })
     return NextResponse.json({ success: true, session }, { status: 201 })
   } catch (error) {

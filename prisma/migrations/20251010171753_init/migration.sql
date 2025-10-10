@@ -18,7 +18,7 @@ CREATE TABLE "GameSession" (
 -- CreateTable
 CREATE TABLE "Round" (
     "id" TEXT NOT NULL,
-    "name" TEXT,
+    "name" TEXT NOT NULL,
     "gameMode" "GameMode" NOT NULL,
     "pointsPerQuestion" INTEGER NOT NULL DEFAULT 10,
     "totalQuestions" INTEGER,
@@ -64,19 +64,19 @@ CREATE TABLE "ScoreHistory" (
 );
 
 -- AddForeignKey
-ALTER TABLE "Round" ADD CONSTRAINT "Round_gameSessionId_fkey" FOREIGN KEY ("gameSessionId") REFERENCES "GameSession"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Round" ADD CONSTRAINT "Round_gameSessionId_fkey" FOREIGN KEY ("gameSessionId") REFERENCES "GameSession"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Team" ADD CONSTRAINT "Team_gameSessionId_fkey" FOREIGN KEY ("gameSessionId") REFERENCES "GameSession"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Team" ADD CONSTRAINT "Team_gameSessionId_fkey" FOREIGN KEY ("gameSessionId") REFERENCES "GameSession"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Question" ADD CONSTRAINT "Question_roundId_fkey" FOREIGN KEY ("roundId") REFERENCES "Round"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Question" ADD CONSTRAINT "Question_roundId_fkey" FOREIGN KEY ("roundId") REFERENCES "Round"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "ScoreHistory" ADD CONSTRAINT "ScoreHistory_teamId_fkey" FOREIGN KEY ("teamId") REFERENCES "Team"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "ScoreHistory" ADD CONSTRAINT "ScoreHistory_teamId_fkey" FOREIGN KEY ("teamId") REFERENCES "Team"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "ScoreHistory" ADD CONSTRAINT "ScoreHistory_roundId_fkey" FOREIGN KEY ("roundId") REFERENCES "Round"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "ScoreHistory" ADD CONSTRAINT "ScoreHistory_roundId_fkey" FOREIGN KEY ("roundId") REFERENCES "Round"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "ScoreHistory" ADD CONSTRAINT "ScoreHistory_questionId_fkey" FOREIGN KEY ("questionId") REFERENCES "Question"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "ScoreHistory" ADD CONSTRAINT "ScoreHistory_questionId_fkey" FOREIGN KEY ("questionId") REFERENCES "Question"("id") ON DELETE CASCADE ON UPDATE CASCADE;
