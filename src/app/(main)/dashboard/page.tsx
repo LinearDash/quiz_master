@@ -5,17 +5,8 @@ import { useEffect, useState } from "react";
 import SessionCard from "@/components/sessionCard";
 import { Spinner } from "@/components/ui/spinner";
 import { Badge } from "@/components/ui/badge"
+import { Session } from "@/lib/schemas/session";
 
-// So that typescript won't complain 
-type Session = {
-  id: string;
-  eventName: string;
-  organizerName: string;
-  organizerImage?: string;
-  createdAt: string;
-  teams?: Array<{ id: string; name: string; score: number }>;
-  rounds?: Array<{ id: string; name?: string; gameMode: string }>;
-};
 
 export default function DashboardPage() {
   const [sessions, setSessions] = useState<Session[]>([]);

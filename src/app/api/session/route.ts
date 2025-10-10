@@ -21,7 +21,18 @@ export async function GET() {
       }
     });
 
-    return NextResponse.json({ success: true, sessions }, { status: 200 });
+    // Validate and transform the sessions to match our schema
+    const validatedSessions = sessions.map(session =>
+      sessionSchema.parse({
+        ...session,
+        createdAt: session.createdAt.toISOString(),
+        teams: session.teams,
+        rounds: session.rounds,
+        _count: session._count,
+      })
+    );
+
+    return NextResponse.json({ success: true, sessions: validatedSessions }, { status: 200 });
   } catch (error) {
     console.error("Error fetching sessions:", error);
     return NextResponse.json(
