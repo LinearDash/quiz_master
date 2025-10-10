@@ -56,7 +56,18 @@ export default function DashboardPage() {
           <h1 className="text-3xl font-bold text-gray-900">Quiz Sessions</h1>
           <p className="mt-2 text-gray-600">Manage and view your quiz game sessions</p>
         </div>
-
+        {/* Create New Session Button */}
+        <div className="mb-6">
+          <button
+            className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            onClick={() => {
+              // Logic to create a new session
+              console.log("Create New Session button clicked");
+            }}
+          >
+            Create New Session
+          </button>
+        </div>
         {/* Sessions Grid */}
         {sessions.length === 0 ? (
           <div className="text-center py-12">
