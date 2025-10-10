@@ -1,40 +1,13 @@
 
 "use client";
 
-import { useEffect, useState } from "react";
 import SessionCard from "@/components/sessionCard";
 import { Spinner } from "@/components/ui/spinner";
-import { Badge } from "@/components/ui/badge"
-import { Session } from "@/lib/schemas/session";
-
+import { Badge } from "@/components/ui/badge";
+import { useSessions } from "@/hooks/useSessions";
 
 export default function DashboardPage() {
-  const [sessions, setSessions] = useState<Session[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    fetchSessions();
-  }, []);
-
-  const fetchSessions = async () => {
-    try {
-      setLoading(true);
-      const response = await fetch('/api/session');
-      const data = await response.json();
-
-      if (data.success) {
-        setSessions(data.sessions);
-      } else {
-        setError(data.error || 'Failed to fetch sessions');
-      }
-    } catch (err) {
-      setError('Failed to fetch sessions');
-      console.error('Error fetching sessions:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const { sessions, loading, error, refetch } = useSessions();
 
   if (loading) {
     return (
@@ -63,7 +36,7 @@ export default function DashboardPage() {
               <h2 className="text-lg font-medium text-red-800 mb-2">Error Loading Sessions</h2>
               <p className="text-red-600">{error}</p>
               <button
-                onClick={fetchSessions}
+                onClick={refetch}
                 className="mt-4 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors"
               >
                 Try Again
@@ -103,7 +76,7 @@ export default function DashboardPage() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {sessions.map((session) => (
-              <SessionCard key={session.id} session={session} />
+              <SessionCard key={session.id} sessionData={session} />
             ))}
           </div>
         )}

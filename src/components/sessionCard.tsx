@@ -1,22 +1,12 @@
-
 import { Calendar, User, Users, Clock, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
+import { Session } from '@/lib/schemas/session';
+import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
 
-interface Session {
-  id: string;
-  eventName: string;
-  organizerName: string;
-  organizerImage?: string;
-  createdAt: string;
-  teams?: Array<{ id: string; name: string; score: number }>;
-  rounds?: Array<{ id: string; name?: string; gameMode: string }>;
-}
-
-interface SessionCardProps {
-  session: Session;
-}
-
-export default function SessionCard({ session }: SessionCardProps) {
+export default function SessionCard({ sessionData }: { sessionData: Session }) {
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', {
@@ -43,114 +33,122 @@ export default function SessionCard({ session }: SessionCardProps) {
     }
   };
 
+  const getInitials = (name: string) => {
+    return name
+      .split(' ')
+      .map(word => word.charAt(0))
+      .join('')
+      .toUpperCase()
+      .slice(0, 2);
+  };
+
   return (
-    <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 border border-gray-200 overflow-hidden">
-      {/* Header */}
-      <div className="p-6 border-b border-gray-100">
+    <Card className="hover:shadow-lg transition-shadow duration-200">
+      <CardHeader className="pb-3">
         <div className="flex items-start justify-between">
           <div className="flex-1">
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">
-              {session.eventName}
+            <h3 className="text-xl font-semibold text-foreground mb-2">
+              {sessionData.eventName}
             </h3>
-            <div className="flex items-center text-gray-600 mb-3">
+            <div className="flex items-center text-muted-foreground mb-3">
               <User className="w-4 h-4 mr-2" />
-              <span className="text-sm">Organized by {session.organizerName}</span>
+              <span className="text-sm">Organized by {sessionData.organizerName}</span>
             </div>
           </div>
-          {session.organizerImage && (
-            <div className="ml-4">
-              <img
-                src={session.organizerImage}
-                alt={session.organizerName}
-                className="w-12 h-12 rounded-full object-cover"
+          <Avatar className="ml-4 h-12 w-12">
+            {sessionData.organizerImage ? (
+              <AvatarImage
+                src={sessionData.organizerImage}
+                alt={sessionData.organizerName}
               />
-            </div>
-          )}
+            ) : null}
+            <AvatarFallback className="text-sm font-medium">
+              {getInitials(sessionData.organizerName)}
+            </AvatarFallback>
+          </Avatar>
         </div>
-      </div>
+      </CardHeader>
 
-      {/* Content */}
-      <div className="p-6">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+      <CardContent className="space-y-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {/* Date */}
-          <div className="flex items-center text-gray-600">
+          <div className="flex items-center text-muted-foreground">
             <Calendar className="w-4 h-4 mr-2" />
-            <span className="text-sm">{formatDate(session.createdAt)}</span>
+            <span className="text-sm">{formatDate(sessionData.createdAt)}</span>
           </div>
 
           {/* Teams Count */}
-          <div className="flex items-center text-gray-600">
+          <div className="flex items-center text-muted-foreground">
             <Users className="w-4 h-4 mr-2" />
             <span className="text-sm">
-              {session.teams?.length || 0} team{(session.teams?.length || 0) !== 1 ? 's' : ''}
+              {sessionData.teams?.length || 0} team{(sessionData.teams?.length || 0) !== 1 ? 's' : ''}
             </span>
           </div>
 
           {/* Rounds Count */}
-          <div className="flex items-center text-gray-600">
+          <div className="flex items-center text-muted-foreground">
             <Clock className="w-4 h-4 mr-2" />
             <span className="text-sm">
-              {session.rounds?.length || 0} round{(session.rounds?.length || 0) !== 1 ? 's' : ''}
+              {sessionData.rounds?.length || 0} round{(sessionData.rounds?.length || 0) !== 1 ? 's' : ''}
             </span>
           </div>
         </div>
 
         {/* Game Modes */}
-        {session.rounds && session.rounds.length > 0 && (
-          <div className="mb-4">
-            <h4 className="text-sm font-medium text-gray-700 mb-2">Game Modes:</h4>
+        {sessionData.rounds && sessionData.rounds.length > 0 && (
+          <div>
+            <h4 className="text-sm font-medium text-foreground mb-2">Game Modes:</h4>
             <div className="flex flex-wrap gap-2">
-              {session.rounds.slice(0, 3).map((round, index) => (
-                <span
+              {sessionData.rounds.slice(0, 3).map((round) => (
+                <Badge
                   key={round.id}
-                  className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800"
+                  variant="secondary"
+                  className="text-xs"
                 >
                   {round.name || getGameModeDisplay(round.gameMode)}
-                </span>
+                </Badge>
               ))}
-              {session.rounds.length > 3 && (
-                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
-                  +{session.rounds.length - 3} more
-                </span>
+              {sessionData.rounds.length > 3 && (
+                <Badge variant="outline" className="text-xs">
+                  +{sessionData.rounds.length - 3} more
+                </Badge>
               )}
             </div>
           </div>
         )}
 
         {/* Teams Leaderboard */}
-        {session.teams && session.teams.length > 0 && (
-          <div className="mb-4">
-            <h4 className="text-sm font-medium text-gray-700 mb-2">Teams:</h4>
-            <div className="space-y-1">
-              {session.teams
+        {sessionData.teams && sessionData.teams.length > 0 && (
+          <div>
+            <h4 className="text-sm font-medium text-foreground mb-2">Teams:</h4>
+            <div className="space-y-2">
+              {sessionData.teams
                 .sort((a, b) => b.score - a.score)
                 .slice(0, 3)
                 .map((team, index) => (
                   <div key={team.id} className="flex items-center justify-between text-sm">
                     <div className="flex items-center">
-                      <span className="w-6 h-6 rounded-full bg-gray-200 flex items-center justify-center text-xs font-medium mr-2">
+                      <div className="w-6 h-6 rounded-full bg-muted flex items-center justify-center text-xs font-medium mr-2">
                         {index + 1}
-                      </span>
-                      <span className="text-gray-700">{team.name}</span>
+                      </div>
+                      <span className="text-foreground">{team.name}</span>
                     </div>
-                    <span className="font-medium text-gray-900">{team.score} pts</span>
+                    <span className="font-medium text-foreground">{team.score} pts</span>
                   </div>
                 ))}
             </div>
           </div>
         )}
-      </div>
+      </CardContent>
 
-      {/* Footer */}
-      <div className="px-6 py-4 bg-gray-50 border-t border-gray-100">
-        <Link
-          href={`/dashboard/${session.id}`}
-          className="inline-flex items-center text-blue-600 hover:text-blue-800 font-medium text-sm transition-colors duration-200"
-        >
-          View Session
-          <ArrowRight className="w-4 h-4 ml-1" />
-        </Link>
-      </div>
-    </div>
+      <CardFooter className="pt-0">
+        <Button asChild variant="ghost" className="w-full justify-between">
+          <Link href={`/dashboard/${sessionData.id}`}>
+            View Session
+            <ArrowRight className="w-4 h-4" />
+          </Link>
+        </Button>
+      </CardFooter>
+    </Card>
   );
 }
