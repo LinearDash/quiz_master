@@ -7,9 +7,9 @@ import { Badge } from "@/components/ui/badge";
 import { useSessions } from "@/hooks/useSessions";
 
 export default function DashboardPage() {
-  const { sessions, loading, error, refetch } = useSessions();
+  const { data, error, isLoading, refetch } = useSessions();
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="min-h-screen bg-gray-50 py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -34,9 +34,9 @@ export default function DashboardPage() {
           <div className="text-center">
             <div className="bg-red-50 border border-red-200 rounded-lg p-6">
               <h2 className="text-lg font-medium text-red-800 mb-2">Error Loading Sessions</h2>
-              <p className="text-red-600">{error}</p>
+              <p className="text-red-600">{error.message}</p>
               <button
-                onClick={refetch}
+                onClick={() => refetch()}
                 className="mt-4 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors"
               >
                 Try Again
@@ -69,7 +69,7 @@ export default function DashboardPage() {
           </button>
         </div>
         {/* Sessions Grid */}
-        {sessions.length === 0 ? (
+        {data?.sessions?.length === 0 ? (
           <div className="text-center py-12">
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-12">
               <div className="mx-auto w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mb-4">
@@ -86,7 +86,7 @@ export default function DashboardPage() {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {sessions.map((session) => (
+            {data?.sessions.map((session) => (
               <SessionCard key={session.id} sessionData={session} />
             ))}
           </div>

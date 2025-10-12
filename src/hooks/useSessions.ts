@@ -1,47 +1,23 @@
-import { useState, useEffect } from 'react';
-import { Session } from '@/lib/schemas/session';
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import { sessionSchema } from "@/lib/schemas/session";
+import z from "zod";
 
-interface UseSessionsReturn {
-  sessions: Session[];
-  loading: boolean;
-  error: string | null;
-  refetch: () => Promise<void>;
+const responseData = z.object({
+  success: z.boolean,
+  sessions: z.array(sessionSchema)
+})
+
+const fetchSessions = async (): Promise<z.infer<typeof responseData>> => {
+  const { data } = await axios.get("/api/session");
+  return data;
 }
 
-export function useSessions(): UseSessionsReturn {
-  const [sessions, setSessions] = useState<Session[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+export function useSessions() {
+  const { data, error, isLoading, refetch } = useQuery({
+    queryKey: ["session"],
+    queryFn: fetchSessions
+  })
 
-  const fetchSessions = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-
-      const response = await fetch('/api/session');
-      const data = await response.json();
-
-      if (data.success) {
-        setSessions(data.sessions);
-      } else {
-        setError(data.error || 'Failed to fetch sessions');
-      }
-    } catch (err) {
-      setError('Failed to fetch sessions');
-      console.error('Error fetching sessions:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchSessions();
-  }, []);
-
-  return {
-    sessions,
-    loading,
-    error,
-    refetch: fetchSessions,
-  };
+  return { data, error, isLoading, refetch };
 }

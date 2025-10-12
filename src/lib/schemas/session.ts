@@ -1,6 +1,6 @@
 import { z } from "zod";
+import { roundSchema } from "./round";
 
-export const gameModeEnum = z.enum(["QUESTION_PICK", "RAPID_FIRE", "AUDIO", "VISUAL"]);
 
 export const teamSchema = z.object({
   id: z.string().min(1),
@@ -8,11 +8,6 @@ export const teamSchema = z.object({
   score: z.number().int(),
 });
 
-export const roundSchema = z.object({
-  id: z.string().min(1),
-  name: z.string().min(1, "Round name is required"),
-  gameMode: gameModeEnum,
-});
 
 // Schema for creating a new session (POST request body)
 export const createSessionSchema = z.object({
@@ -44,6 +39,6 @@ export const sessionSchema = z.object({
 export type CreateSessionRequest = z.infer<typeof createSessionSchema>;
 export type Session = z.infer<typeof sessionSchema>;
 export type Team = z.infer<typeof teamSchema>;
-export type Round = z.infer<typeof roundSchema>;
+
 
 
