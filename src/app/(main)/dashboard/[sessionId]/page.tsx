@@ -1,13 +1,14 @@
 "use client";
 
+import { use } from "react";
 import { useFetchSessionData } from "@/hooks/sessions/useFetchSessionData";
 import { Button } from "@/components/ui/button";
 import { TeamsSection } from "@/components/TeamsSection";
 import { RoundsSection } from "@/components/RoundsSection";
 import { Trash2, Play } from "lucide-react";
 
-export default function Page({ params }: { params: { sessionId: string } }) {
-  const { sessionId } = params;
+export default function Page({ params }: { params: Promise<{ sessionId: string }> }) {
+  const { sessionId } = use(params);
 
   const { data: session, isLoading, error } = useFetchSessionData(sessionId);
 

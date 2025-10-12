@@ -8,7 +8,15 @@ export async function GET() {
     const sessions = await prisma.gameSession.findMany({
       include: {
         teams: true,
-        rounds: true,
+        rounds: {
+          include: {
+            _count: {
+              select: {
+                questions: true
+              }
+            }
+          }
+        },
         _count: {
           select: {
             teams: true,
@@ -27,7 +35,10 @@ export async function GET() {
         ...session,
         createdAt: session.createdAt.toISOString(),
         teams: session.teams,
-        rounds: session.rounds,
+        rounds: session.rounds.map(round => ({
+          ...round,
+          createdAt: (round as any).createdAt ? (round as any).createdAt.toISOString() : new Date().toISOString(),
+        })),
         _count: session._count,
       })
     );
@@ -58,13 +69,33 @@ export async function POST(req: NextRequest) {
       data: { eventName, organizerName, organizerImage: organizerImage || null },
       include: {
         teams: true,
-        rounds: true,
+        rounds: {
+          include: {
+            _count: {
+              select: {
+                questions: true
+              }
+            }
+          }
+        },
         _count: {
           select: { teams: true, rounds: true }
         }
       }
     })
-    return NextResponse.json({ success: true, session }, { status: 201 })
+    // Transform the session data to match schema
+    const transformedSession = {
+      ...session,
+      createdAt: session.createdAt.toISOString(),
+      teams: session.teams,
+      rounds: session.rounds.map(round => ({
+        ...round,
+        createdAt: (round as any).createdAt ? (round as any).createdAt.toISOString() : new Date().toISOString(),
+      })),
+      _count: session._count,
+    };
+
+    return NextResponse.json({ success: true, session: transformedSession }, { status: 201 })
   } catch (error) {
     console.error(error);
     return NextResponse.json({ success: false, error: "Internal server error" }, { status: 500 });
