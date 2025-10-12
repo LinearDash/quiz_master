@@ -46,7 +46,7 @@ model Round {
   totalQuestions    Int? // optional, for QUESTION_PICK or timed modes
   durationInSeconds Int? // optional, for RAPID_FIRE
 
-  gameSession   GameSession @relation(fields: [gameSessionId], references: [id], onDelete: Cascade)
+  gameSession   GameSession @relation(fields: [gameSessionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   gameSessionId String
 
   questions      Question[]
@@ -57,7 +57,7 @@ model Team {
   id            String      @id @default(cuid())
   name          String
   score         Int         @default(0)
-  gameSession   GameSession @relation(fields: [gameSessionId], references: [id], onDelete: Cascade)
+  gameSession   GameSession @relation(fields: [gameSessionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   gameSessionId String
 
   scoreHistory ScoreHistory[]
@@ -86,6 +86,6 @@ model ScoreHistory {
   roundId    String
   question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
   questionId String
-  points     Int // points earned for this question
+  points     Int
   timestamp  DateTime @default(now())
 }
