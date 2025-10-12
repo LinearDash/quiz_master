@@ -1,23 +1,18 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { sessionSchema } from "@/lib/schemas/session";
-import z from "zod";
+import { Session } from "@/lib/schemas/session";
 
-const responseData = z.object({
-  success: z.boolean,
-  sessions: z.array(sessionSchema)
-})
 
-const fetchSessions = async (): Promise<z.infer<typeof responseData>> => {
-  const { data } = await axios.get("/api/session");
-  return data;
+const fetchSessions = async () => {
+  const response = await axios.get("/api/session");
+  return response.data.sessions; // Return just the sessions array
 }
 
 export function useSessions() {
-  const { data, error, isLoading, refetch } = useQuery({
-    queryKey: ["session"],
+  const { data: sessions = [], error, isLoading, refetch } = useQuery({
+    queryKey: ["sessions"],
     queryFn: fetchSessions
   })
 
-  return { data, error, isLoading, refetch };
+  return { sessions, error, isLoading, refetch };
 }

@@ -5,9 +5,14 @@ import SessionCard from "@/components/sessionCard";
 import { Spinner } from "@/components/ui/spinner";
 import { Badge } from "@/components/ui/badge";
 import { useSessions } from "@/hooks/useSessions";
+import { useState } from "react";
+import { EventFormDialog } from "@/components/sessionFormDialog";
+import { Session } from "@/lib/schemas/session";
+
 
 export default function DashboardPage() {
-  const { data, error, isLoading, refetch } = useSessions();
+  const { sessions, error, isLoading, refetch } = useSessions();
+  const [open, setOpen] = useState(false)
 
   if (isLoading) {
     return (
@@ -34,7 +39,7 @@ export default function DashboardPage() {
           <div className="text-center">
             <div className="bg-red-50 border border-red-200 rounded-lg p-6">
               <h2 className="text-lg font-medium text-red-800 mb-2">Error Loading Sessions</h2>
-              <p className="text-red-600">{error.message}</p>
+              <p className="text-red-600">{error?.message || 'An error occurred'}</p>
               <button
                 onClick={() => refetch()}
                 className="mt-4 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors"
@@ -61,15 +66,14 @@ export default function DashboardPage() {
           <button
             className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
             onClick={() => {
-              // Logic to create a new session
-              console.log("Create New Session button clicked");
+              setOpen(true)
             }}
           >
             Create New Session
           </button>
         </div>
         {/* Sessions Grid */}
-        {data?.sessions?.length === 0 ? (
+        {sessions.length === 0 ? (
           <div className="text-center py-12">
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-12">
               <div className="mx-auto w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mb-4">
@@ -86,12 +90,13 @@ export default function DashboardPage() {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {data?.sessions.map((session) => (
+            {sessions.map((session: Session) => (
               <SessionCard key={session.id} sessionData={session} />
             ))}
           </div>
         )}
       </div>
+      <EventFormDialog open={open} onOpenChange={setOpen} />
     </div>
   );
 }
