@@ -1,13 +1,6 @@
 import { z } from "zod";
 import { roundSchema } from "./round";
-
-
-export const teamSchema = z.object({
-  id: z.string().min(1),
-  name: z.string().min(1),
-  score: z.number().int(),
-});
-
+import { teamSchema } from "./team";
 
 // Schema for creating a new session (POST request body)
 export const createSessionSchema = z.object({

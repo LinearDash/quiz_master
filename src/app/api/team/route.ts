@@ -9,6 +9,7 @@ export async function POST(req: NextRequest) {
     const {
       gameSessionId,
       name
+
     } = body;
 
     console.log(name);

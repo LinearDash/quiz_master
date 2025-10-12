@@ -13,7 +13,7 @@ export function useCreateSession() {
   return useMutation({
     mutationFn: createSession,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['sessions'] }); // Fixed query key to match useSessions
+      queryClient.invalidateQueries({ queryKey: ['sessions'] });
     },
     onError: (error) => {
       console.log(error);
