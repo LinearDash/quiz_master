@@ -3,6 +3,8 @@ import { prisma } from "@/lib/prisma";
 
 import { createSessionSchema, sessionSchema } from "@/lib/schemas/session";
 
+export const dynamic = 'force-dynamic';
+
 export async function GET() {
   try {
     const sessions = await prisma.gameSession.findMany({
@@ -37,7 +39,7 @@ export async function GET() {
         teams: session.teams,
         rounds: session.rounds.map(round => ({
           ...round,
-          createdAt: (round as any).createdAt ? (round as any).createdAt.toISOString() : new Date().toISOString(),
+          createdAt: (round as any).createdAt instanceof Date ? (round as any).createdAt.toISOString() : (round as any).createdAt,
         })),
         _count: session._count,
       })

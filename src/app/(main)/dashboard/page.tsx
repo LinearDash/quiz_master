@@ -4,10 +4,10 @@
 import SessionCard from "@/components/sessionCard";
 import { Spinner } from "@/components/ui/spinner";
 import { Badge } from "@/components/ui/badge";
-import { useSessions } from "@/hooks/useSessions";
 import { useState } from "react";
 import { EventFormDialog } from "@/components/sessionFormDialog";
 import { Session } from "@/lib/schemas/session";
+import { useSessions } from "@/hooks/sessions/useSessions";
 
 
 export default function DashboardPage() {
@@ -73,7 +73,7 @@ export default function DashboardPage() {
           </button>
         </div>
         {/* Sessions Grid */}
-        {sessions.length === 0 ? (
+        {sessions?.length === 0 ? (
           <div className="text-center py-12">
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-12">
               <div className="mx-auto w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mb-4">
@@ -83,14 +83,14 @@ export default function DashboardPage() {
               </div>
               <h3 className="text-lg font-medium text-gray-900 mb-2">No sessions yet</h3>
               <p className="text-gray-500 mb-6">Create your first quiz session to get started.</p>
-              <button className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+              <button className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors" onClick={() => setOpen(true)}>
                 Create New Session
               </button>
             </div>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {sessions.map((session: Session) => (
+            {sessions?.map((session: Session) => (
               <SessionCard key={session.id} sessionData={session} />
             ))}
           </div>

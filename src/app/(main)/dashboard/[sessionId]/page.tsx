@@ -6,9 +6,12 @@ import { Button } from "@/components/ui/button";
 import { TeamsSection } from "@/components/TeamsSection";
 import { RoundsSection } from "@/components/RoundsSection";
 import { Trash2, Play } from "lucide-react";
+import { RoundFormDialog } from "@/components/RoundFormDialog";
+import { useState } from "react";
 
 export default function Page({ params }: { params: Promise<{ sessionId: string }> }) {
   const { sessionId } = use(params);
+  const [openRoundForm, setOpenRoundForm] = useState(false);
 
   const { data: session, isLoading, error } = useFetchSessionData(sessionId);
 
@@ -20,6 +23,7 @@ export default function Page({ params }: { params: Promise<{ sessionId: string }
   const handleAddRound = () => {
     // TODO: Add round creation functionality
     console.log('Add round to session:', sessionId);
+    setOpenRoundForm(true);
   };
 
   if (isLoading) {
@@ -119,6 +123,7 @@ export default function Page({ params }: { params: Promise<{ sessionId: string }
           </p>
         </div>
       </div>
+      <RoundFormDialog open={openRoundForm} onOpenChange={setOpenRoundForm} sessionId={sessionId} />
     </div>
   );
 }

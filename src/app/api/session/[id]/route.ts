@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { sessionSchema } from "@/lib/schemas/session";
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
   try {
     const { id } = params;
@@ -36,7 +38,10 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
       ...session,
       createdAt: session.createdAt.toISOString(),
       teams: session.teams,
-      rounds: session.rounds,
+      rounds: session.rounds.map((round: any) => ({
+        ...round,
+        createdAt: round.createdAt instanceof Date ? round.createdAt.toISOString() : round.createdAt,
+      })),
       _count: {
         teams: session.teams.length,
         rounds: session.rounds.length,

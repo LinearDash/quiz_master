@@ -27,3 +27,5 @@ export const roundSchema = z.object({
     questions: z.number().int(),
   }).optional(),
 });
+
+export type CreateRoundRequest = z.infer<typeof createRoundSchema>

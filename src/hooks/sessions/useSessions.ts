@@ -5,28 +5,33 @@ import z from "zod";
 
 
 const responseData = z.object({
-  success: z.boolean,
+  success: z.boolean(),
   sessions: z.array(sessionSchema),
   error: z.string().optional()
 
 })
 
 const fetchSessions = async (): Promise<Session[]> => {
+
   const { data } = await axios.get("/api/session");
-  const validatedResponse = responseData.parse(data);
+  console.log(data);
+
+  const validatedResponse = responseData.safeParse(data);;
 
   if (validatedResponse.success) {
-    return validatedResponse.sessions;
+    return validatedResponse.data.sessions;
   } else {
-    throw new Error(validatedResponse.error || 'Failed to fetch sessions');
+    throw new Error(validatedResponse.error?.message || 'Failed to fetch sessions');
   }
 }
 
 export function useSessions() {
-  const { data, error, isLoading, refetch } = useQuery({
+  console.log("Hellow");
+
+  const { data: sessions, error, isLoading, refetch } = useQuery({
     queryKey: ["sessions"],
     queryFn: fetchSessions
   })
 
-  return { data, error, isLoading, refetch };
+  return { sessions, error, isLoading, refetch };
 }
