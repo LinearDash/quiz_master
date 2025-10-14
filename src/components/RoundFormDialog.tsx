@@ -49,75 +49,88 @@ export function RoundFormDialog({ open, onOpenChange, sessionId }: Props) {
 
         <form onSubmit={handleSubmit}>
           <div className="grid gap-6 py-4">
+            <fieldset className="rounded-lg border p-4">
+              <legend className="px-1 text-sm font-medium text-muted-foreground">Round basics</legend>
+              <div className="mt-3 grid gap-3">
+                <div className="grid gap-2">
+                  <Label htmlFor="round-name">Round Name<span className="ml-1 text-red-500">*</span></Label>
+                  <Input
+                    id="round-name"
+                    placeholder="e.g. Rapid Round, Audio Quiz"
+                    value={data.name}
+                    onChange={(e) => setData({ ...data, name: e.target.value })}
+                    required
+                    aria-describedby="round-name-hint"
+                  />
+                  <p id="round-name-hint" className="text-xs text-muted-foreground">Give this round a short, descriptive name.</p>
+                </div>
 
-
-            <div className="grid gap-2">
-              <Label htmlFor="round-name">Round Name</Label>
-              <Input
-                id="round-name"
-                placeholder="Enter round name"
-                value={data.name}
-                onChange={(e) => setData({ ...data, name: e.target.value })}
-                required
-
-              />
-            </div>
-
-            <div className="grid gap-2">
-              <Label htmlFor="game-mode">Game Mode</Label>
-              <select
-                id="game-mode"
-                value={data.gameMode}
-                onChange={(e) => setData({ ...data, gameMode: e.target.value as typeof gameMode })}
-
-                className="h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-              >
-                <option value="QUESTION_PICK">Question Pick</option>
-                <option value="RAPID_FIRE">Rapid Fire</option>
-                <option value="AUDIO">Audio</option>
-                <option value="VISUAL">Visual</option>
-              </select>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              <div className="grid gap-2">
-                <Label htmlFor="points">Points / Question</Label>
-                <Input
-                  id="points"
-                  type="number"
-                  inputMode="numeric"
-                  value={data.pointsPerQuestion ?? ""}
-                  onChange={(e) => setData({ ...data, pointsPerQuestion: e.target.value ? Number(e.target.value) : undefined })}
-
-                  min={0}
-
-                />
+                <div className="grid gap-2">
+                  <Label htmlFor="game-mode">Game Mode</Label>
+                  <select
+                    id="game-mode"
+                    value={data.gameMode}
+                    onChange={(e) => setData({ ...data, gameMode: e.target.value as typeof gameMode })}
+                    className="h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                    aria-describedby="game-mode-hint"
+                  >
+                    <option value="QUESTION_PICK">Question Pick</option>
+                    <option value="RAPID_FIRE">Rapid Fire</option>
+                    <option value="AUDIO">Audio</option>
+                    <option value="VISUAL">Visual</option>
+                  </select>
+                  <p id="game-mode-hint" className="text-xs text-muted-foreground">Choose how teams will play in this round.</p>
+                </div>
               </div>
-              <div className="grid gap-2">
-                <Label htmlFor="questions">Total Questions</Label>
-                <Input
-                  id="questions"
-                  type="number"
-                  inputMode="numeric"
-                  value={data.totalQuestions ?? ""}
-                  onChange={(e) => setData({ ...data, totalQuestions: e.target.value ? Number(e.target.value) : undefined })}
-                  min={1}
+            </fieldset>
 
-                />
+            <fieldset className="rounded-lg border p-4">
+              <legend className="px-1 text-sm font-medium text-muted-foreground">Scoring & timing</legend>
+              <div className="mt-3 grid grid-cols-1 gap-4 sm:grid-cols-3">
+                <div className="grid gap-2">
+                  <Label htmlFor="points">Points / Question</Label>
+                  <Input
+                    id="points"
+                    type="number"
+                    inputMode="numeric"
+                    placeholder="10"
+                    value={data.pointsPerQuestion ?? ""}
+                    onChange={(e) => setData({ ...data, pointsPerQuestion: e.target.value ? Number(e.target.value) : undefined })}
+                    min={0}
+                    aria-describedby="points-hint"
+                  />
+                  <p id="points-hint" className="text-xs text-muted-foreground">Default: 10</p>
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="questions">Total Questions</Label>
+                  <Input
+                    id="questions"
+                    type="number"
+                    inputMode="numeric"
+                    placeholder="20"
+                    value={data.totalQuestions ?? ""}
+                    onChange={(e) => setData({ ...data, totalQuestions: e.target.value ? Number(e.target.value) : undefined })}
+                    min={1}
+                    aria-describedby="questions-hint"
+                  />
+                  <p id="questions-hint" className="text-xs text-muted-foreground">Leave empty if variable.</p>
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="duration">Duration (sec)</Label>
+                  <Input
+                    id="duration"
+                    type="number"
+                    inputMode="numeric"
+                    placeholder="60"
+                    value={data.durationInSeconds ?? ""}
+                    onChange={(e) => setData({ ...data, durationInSeconds: e.target.value ? Number(e.target.value) : undefined })}
+                    min={10}
+                    aria-describedby="duration-hint"
+                  />
+                  <p id="duration-hint" className="text-xs text-muted-foreground">Minimum recommended: 10s</p>
+                </div>
               </div>
-              <div className="grid gap-2">
-                <Label htmlFor="duration">Duration (sec)</Label>
-                <Input
-                  id="duration"
-                  type="number"
-                  inputMode="numeric"
-                  value={data.durationInSeconds ?? ""}
-                  onChange={(e) => setData({ ...data, durationInSeconds: e.target.value ? Number(e.target.value) : undefined })}
-                  min={10}
-
-                />
-              </div>
-            </div>
+            </fieldset>
           </div>
 
           <DialogFooter>
