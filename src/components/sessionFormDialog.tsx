@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState, useRef, type DragEvent } from "react"
+import { useState } from "react"
 import {
   Dialog,
   DialogContent,
@@ -14,7 +14,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { useCreateSession } from "@/hooks/sessions/useCreateSession"
+import { useCreateSession } from "@/hooks/rounds/sessions/useCreateSession"
 import { CreateSessionRequest } from "@/lib/schemas/session"
 
 interface EventFormDialogProps {

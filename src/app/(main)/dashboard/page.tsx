@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { useState } from "react";
 import { EventFormDialog } from "@/components/sessionFormDialog";
 import { Session } from "@/lib/schemas/session";
-import { useSessions } from "@/hooks/sessions/useSessions";
+import { useSessions } from "@/hooks/rounds/sessions/useSessions";
 
 
 export default function DashboardPage() {

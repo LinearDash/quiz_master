@@ -8,7 +8,7 @@ export async function POST(req: NextRequest) {
 
     const body = await req.json();
 
-    const parseData = createRoundSchema.safeParse({ ...body })
+    const parseData = createRoundSchema.safeParse(body)
 
     if (!parseData.success) {
       return NextResponse.json({ success: false, error: parseData.error }, { status: 400 })
