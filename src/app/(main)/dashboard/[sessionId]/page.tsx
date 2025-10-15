@@ -1,7 +1,7 @@
 "use client";
 
 import { use } from "react";
-import { useFetchSessionData } from "@/hooks/rounds/sessions/useFetchSessionData";
+import { useFetchSessionData } from "@/hooks/sessions/useFetchSessionData";
 import { Button } from "@/components/ui/button";
 import { TeamsSection } from "@/components/TeamsSection";
 import { RoundsSection } from "@/components/RoundsSection";
