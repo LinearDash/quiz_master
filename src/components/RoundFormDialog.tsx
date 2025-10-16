@@ -51,7 +51,7 @@ export function RoundFormDialog({ open, onOpenChange, sessionId }: Props) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[520px]">
+      <DialogContent className="sm:max-w-[560px]">
         <DialogHeader>
           <DialogTitle>Create New Round</DialogTitle>
           <DialogDescription>Configure the round settings and add it to this session.</DialogDescription>
@@ -61,8 +61,8 @@ export function RoundFormDialog({ open, onOpenChange, sessionId }: Props) {
           <div className="grid gap-6 py-4">
             <fieldset className="rounded-lg border p-4">
               <legend className="px-1 text-sm font-medium text-muted-foreground">Round basics</legend>
-              <div className="mt-3 grid gap-3">
-                <div className="grid gap-2">
+              <div className="mt-3 grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <div className="grid gap-2 sm:col-span-2">
                   <Label htmlFor="round-name">Round Name<span className="ml-1 text-red-500">*</span></Label>
                   <Input
                     id="round-name"
@@ -72,7 +72,7 @@ export function RoundFormDialog({ open, onOpenChange, sessionId }: Props) {
                     required
                     aria-describedby="round-name-hint"
                   />
-                  <p id="round-name-hint" className="text-xs text-muted-foreground">Give this round a short, descriptive name.</p>
+                  <p id="round-name-hint" className="text-xs text-muted-foreground min-h-[16px]">Give this round a short, descriptive name.</p>
                 </div>
 
                 <div className="grid gap-2">
@@ -89,7 +89,7 @@ export function RoundFormDialog({ open, onOpenChange, sessionId }: Props) {
                     <option value="AUDIO">Audio</option>
                     <option value="VISUAL">Visual</option>
                   </select>
-                  <p id="game-mode-hint" className="text-xs text-muted-foreground">Choose how teams will play in this round.</p>
+                  <p id="game-mode-hint" className="text-xs text-muted-foreground min-h-[16px]">Choose how teams will play in this round.</p>
                 </div>
               </div>
             </fieldset>
@@ -109,7 +109,7 @@ export function RoundFormDialog({ open, onOpenChange, sessionId }: Props) {
                     min={0}
                     aria-describedby="points-hint"
                   />
-                  <p id="points-hint" className="text-xs text-muted-foreground">Default: 10</p>
+                  <p id="points-hint" className="text-xs text-muted-foreground min-h-[16px]">Default: 10</p>
                 </div>
                 <div className="grid gap-2">
                   <Label htmlFor="questions">Total Questions</Label>
@@ -123,7 +123,7 @@ export function RoundFormDialog({ open, onOpenChange, sessionId }: Props) {
                     min={1}
                     aria-describedby="questions-hint"
                   />
-                  <p id="questions-hint" className="text-xs text-muted-foreground">Leave empty if variable.</p>
+                  <p id="questions-hint" className="text-xs text-muted-foreground min-h-[16px]">Leave empty if variable.</p>
                 </div>
                 <div className="grid gap-2">
                   <Label htmlFor="duration">Duration (sec)</Label>
@@ -137,7 +137,7 @@ export function RoundFormDialog({ open, onOpenChange, sessionId }: Props) {
                     min={10}
                     aria-describedby="duration-hint"
                   />
-                  <p id="duration-hint" className="text-xs text-muted-foreground">Minimum recommended: 10s</p>
+                  <p id="duration-hint" className="text-xs text-muted-foreground min-h-[16px]">Minimum recommended: 10s</p>
                 </div>
               </div>
             </fieldset>
